@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>To-Do List</h1>
+        </div>
+        
+        <div class="todos">
+            <!-- To-Do items will be displayed here -->
+        </div>
+        <div class="add-todo">
+            <!-- <h2>Add New To-Do</h2> -->
+            <form id="todo-form">
+                <div class="row mb-3">
+                    <label for="todo-title" class="col-sm-2 col-form-label">Title:</label>
+                    <div class="col-sm-10">
+                        <input style="border: solid black;" type="text" class="form-control" id="todo-title">
+                    </div>
+                </div>
+                <br><br>
+                <div class="row mb-3">
+                    <label for="todo-items" class="col-sm-2 col-form-label">Items (Comma-Separated):</label>
+                    <div class="col-sm-10">
+                        <input style="border: solid black;" id="todo-items" class="form-control">
+                    </div>
+                </div>
+                <br><br>
+                <button type="button" id="add-item">Add Item</button>
+                <!-- <button type="button" id="save-todo">Save</button> -->
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script>
+        // JavaScript code for managing To-Do items
+        const todoList = [];
+        const todosContainer = document.querySelector(".todos");
+        const todoForm = document.getElementById("todo-form");
+        const addTodoButton = document.getElementById("add-item");
+
+        addTodoButton.addEventListener("click", addItem);
+
+        function renderList() {
+            // Clear the current list
+            while (todosContainer.firstChild) {
+                todosContainer.removeChild(todosContainer.firstChild);
+            }
+        
+            // Iterate through todoList and create list items
+            todoList.forEach((todo, index) => {
+                const todoItem = document.createElement("div");
+                todoItem.className = "todo-item";
+                todoItem.style.width = "300px";
+                todoItem.style.margin = "0 auto";
+                todoItem.style.textAlign = "center";
+                todoItem.style.padding = "20px";
+        
+                // Create the title element
+                const h3 = document.createElement("h3");
+                h3.textContent = todo.title;
+                h3.style.fontSize = "24px";
+                h3.style.marginBottom = "10px";
+                todoItem.appendChild(h3);
+
+                // Create the items list
+                const ul = document.createElement("ul");
+                ul.style.listStyle = "none";
+                ul.style.padding = "0";
+                // ul.setAttribute("data-bs-toggle", "collapse")
+                todo.items.forEach((item, itemIndex) => {
+                    const li = document.createElement("li");
+                    li.style.marginTop = "20px";
+                    // Create the Item description and Delete button for each li item
+                    const itemDescription = document.createElement("div")
+                    itemDescription.classList.add("item");
+                    itemDescription.style.width = "100px";
+                    itemDescription.style.height = "100px";
+                    itemDescription.style.backgroundColor = "#3498db";
+                    itemDescription.style.border = "1px solid #2980b9";
+                    itemDescription.style.borderRadius = "5px";
+                    itemDescription.style.marginRight = "10px";
+                    itemDescription.style.display = "inline-block";
+                    itemDescription.innerHTML = item
+
+                    const deleteItemButton = document.createElement("button");
+                    deleteItemButton.textContent = "Delete";
+                    deleteItemButton.className = "delete-item-button";
+                    deleteItemButton.style.backgroundColor = "#e74c3c";
+                    deleteItemButton.style.color = "#fff";
+                    deleteItemButton.style.border = "none";
+                    deleteItemButton.style.padding = "5px 10px";
+                    deleteItemButton.style.borderRadius = "5px";
+                    deleteItemButton.style.cursor = "pointer";
+                    deleteItemButton.setAttribute("data-todo-index", index);
+                    deleteItemButton.setAttribute("data-item-index", itemIndex);
+                    
+                    // Add a click event listener to the "Delete Item" button
+                    deleteItemButton.addEventListener("click", function() {
+                        deleteItem(index, itemIndex);
+                    });
+        
+                    li.appendChild(itemDescription)
+                    li.appendChild(deleteItemButton);
+                    ul.appendChild(li);
+                });
+                // h3.appendChild(ul);
+                todoItem.appendChild(ul);
+        
+                // Create the "Delete Topic" button for the entire topic
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete Topic";
+                deleteButton.className = "delete-button";
+                deleteButton.setAttribute("data-todo-index", index);
+                deleteButton.style.backgroundColor = "#e74c3c";
+                deleteButton.style.color = "#fff";
+                deleteButton.style.border = "none";
+                deleteButton.style.padding = "5px 10px";
+                deleteButton.style.borderRadius = "5px";
+        
+                // Add a click event listener to the "Delete Topic" button
+                deleteButton.addEventListener("click", function() {
+                    deleteItem(index);
+                });
+        
+                todoItem.appendChild(deleteButton);
+        
+                todosContainer.appendChild(todoItem);
+            });
+        }
+        function addItem() {
+            const title = document.getElementById("todo-title").value;
+            const items = document.getElementById("todo-items").value.split(",");
+            
+            if(title === "") return
+            
+            // Check if the title already exists in todoList
+            const existingTodo = todoList.find((todo) => todo.title === title); // .find gives object who matches the condition.
+
+            if (existingTodo) {
+                // Add items to the existing topic
+                for(let i = 0; i<items.length; i++){
+                    itm = items[i];
+                    existingTodo.items.push(itm);
+                }
+                
+                //existingTodo.items.push(...items);
+            } else {
+                // Create a new topic
+                const newTodo = {
+                    title: title,
+                    items: items,
+                };
+                todoList.push(newTodo);
+            }
+
+            renderList(); // Render the updated list
+
+            // Clear the form fields
+            document.getElementById("todo-title").value = "";
+            document.getElementById("todo-items").value = "";
+        }   
+        function deleteItem(todoIndex, itemIndex) {
+            if (todoIndex !== undefined) {
+                if (itemIndex !== undefined) {
+                    // Delete the specific item within the topic
+                    todoList[todoIndex].items.splice(itemIndex, 1);
+                } else {
+                    // Delete the entire topic
+                    todoList.splice(todoIndex, 1);
+                }
+
+                renderList(); // Render the updated list
+            }
+        }
+        // Initial rendering of the list
+        renderList();
+    </script>
+</body>
+</html>
