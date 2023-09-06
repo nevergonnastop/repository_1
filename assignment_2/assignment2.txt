@@ -1,0 +1,30 @@
+q-2: 
+a.) Ways to create objects 
+1. Object Literal:
+You can create an object using curly braces {} and define its properties and values.
+eg:1
+const person = {
+  firstName: 'John',
+  lastName: 'Doe',
+  age: 30,
+};
+2.Constructor Function:
+You can create objects using constructor functions. This is a traditional way to define classes in JavaScript.
+class Person{
+function Person(firstName, lastName, age) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+  this.age = age;
+}
+}
+const person = new Person('John', 'Doe', 30);
+b.) Ways to create array
+1. Array Literal:
+You can create an array using square brackets [] and list its elements.
+const fruits = ['apple', 'banana', 'cherry'];
+2.Array Constructor:
+You can use the Array constructor to create an array with a specified length or a list of elements.
+const numbers = new Array(1, 2, 3, 4, 5);
+3. Using Array.of method 
+const values = Array.of(10, 20, 30);
+

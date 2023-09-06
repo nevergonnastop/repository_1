@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Addition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result {
+            font-size: 24px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Addition</h1>
+    <label for="number1">Enter number 1 (between 5 and 10):</label>
+    <input type="text" id="number1"><br><br>
+    <label for="number2">Enter number 2 (between 5 and 10):</label>
+    <input type="text" id="number2"><br><br>
+    <button type="button"  id="calculateButton">Add Numbers</button><br><br>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById("calculateButton").addEventListener("click", function () {
+            const num1 = document.getElementById("number1").value;
+            const num2 = document.getElementById("number2").value;
+            const number1 = parseFloat(num1);
+            const number2 = parseFloat(num2);
+            const resultElement = document.getElementById("result");
+            
+            resultElement.innerHTML = "";
+
+            try {
+                if (num1 === "" || num2 === ""){
+                    throw "Empty Inputs: Please fill in both fields. "
+                }
+
+                if (isNaN(number1) || isNaN(number2)) {
+                    throw "Wrong Input: Input can only be a number";
+                }
+
+                if (number1 < 5 || number2 < 5) {
+                    throw "Wrong Input: Number is too low";
+                }
+
+                if (number1 > 10 || number2 > 10) {
+                    throw "Wrong Input: Number is too high";
+                }
+
+                const sum = number1 + number2;
+                resultElement.innerHTML = "Result: " + sum;
+            } catch (error) {
+                resultElement.innerHTML = error;
+            }
+            finally{
+                document.getElementById("number1").value = "";
+                document.getElementById("number2").value = "";
+            }
+        });
+    </script>
+</body>
+</html>
